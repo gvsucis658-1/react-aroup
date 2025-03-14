@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://cis658admin:Im1427007890@cis-658.postgres.database.azure.com:5432/postgres?sslmode=require"
+  url      = ""
 }
 
 enum Location {
