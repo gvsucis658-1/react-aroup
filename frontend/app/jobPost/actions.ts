@@ -32,12 +32,13 @@ export async function createPost(prevState: FormState, formData: FormData) {
     });
 
     revalidatePath("/jobPost");
-    redirect("/jobPost");
   } catch (error) {
     return {
       message: error instanceof Error ? error.message : "Something went wrong",
     };
   }
+
+  redirect("/jobPost");
 }
 
 export async function updatePost(id: number, prevState: FormState, formData: FormData) {
@@ -64,16 +65,11 @@ export async function updatePost(id: number, prevState: FormState, formData: For
     });
 
     revalidatePath("/jobPost");
-    try {
-      redirect("/jobPost");
-    } catch (error) {
-      return {
-        message: error instanceof Error ? error.message : "Something went wrong",
-      };
-    }
   } catch (error) {
     return {
       message: error instanceof Error ? error.message : "Something went wrong",
     };
   }
+
+  redirect("/jobPost");
 } 

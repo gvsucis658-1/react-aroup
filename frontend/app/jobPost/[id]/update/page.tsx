@@ -29,7 +29,7 @@ export default function UpdatePost({ params }: { params: Promise<{ id: string }>
     useEffect(() => {
         async function fetchJobPost() {
             try {
-                const response = await fetch(`/api/jobPost/${id}`);
+                const response = await fetch(`/api/jobpost/${id}`);
                 const data = await response.json();
                 
                 if (!response.ok) {
@@ -50,7 +50,7 @@ export default function UpdatePost({ params }: { params: Promise<{ id: string }>
     }, [id]);
 
     async function handleSubmit(formData: FormData) {
-        setError(""); // Clear any previous errors
+        setError("");
         startTransition(async () => {
             try {
                 const result = await updatePost(id, { message: "" }, formData);
