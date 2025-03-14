@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://cis658admin:Im1427007890@cis-658.postgres.database.azure.com:5432/postgres?sslmode=require"
+}
+
+enum Location {
+  ONSITE
+  REMOTE
+  HYBRID
+}
+
+enum JobType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  INTERNSHIP
+}
+
+model jobPost {
+  id        Int      @id @default(autoincrement())
+  title     String
+  team      String
+  location  Location
+  type      JobType
+  published Boolean  @default(true)
+  deadline  DateTime
+}
