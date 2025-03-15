@@ -15,7 +15,7 @@ Used Technologies:
 
 For this project, I have tried out React Server Components using app router in NextJS. This is my first time using a server action to fetch and modify the data. 
 
-Interesting thing about server components is, the React routes gets rendered on the server, and for this reason we don't need to have an API in between. For the data fetching, I have used Prisma ORM.
+Interesting thing about server components is, the React routes get rendered on the server, and for this reason we don't need to have an API in between. For the data fetching, I have used Prisma ORM.
 
 As we are using the lower tier of the database and container apps, the loading might be a little slow, please be patient. 🙏
 
