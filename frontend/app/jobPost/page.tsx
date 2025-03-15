@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { humanReadableEnum } from "@/app/utils/formatters";
 
- const Posts = async () => {
+export default async function JobPosts() {
   const jobPosts = await prisma.jobPost.findMany({
     orderBy: {
       deadline: 'desc',
@@ -10,9 +10,29 @@ import { humanReadableEnum } from "@/app/utils/formatters";
   });
 
   return (
-    <div className="flex flex-col justify-center px-16">
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Job Posts</h1>
+        <Link
+          href="/jobPost/new"
+          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+        >
+          <svg 
+            className="mr-2 -ml-1 h-5 w-5" 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 20 20" 
+            fill="currentColor"
+          >
+            <path 
+              fillRule="evenodd" 
+              d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" 
+              clipRule="evenodd" 
+            />
+          </svg>
+          Create Job
+        </Link>
+      </div>
       <ul role="list" className="divide-y divide-gray-100">
-        <h1 className="text-2xl font-bold mt-4 mb-4">Job Posts</h1>
         {jobPosts.map((jobPost) => (
           <Link key={jobPost.id} href={`/jobPost/${jobPost.id}`}>
             <li className="flex justify-between gap-x-6 py-5">
@@ -35,5 +55,3 @@ import { humanReadableEnum } from "@/app/utils/formatters";
     </div>
   );
 }
-
-export default Posts;
