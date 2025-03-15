@@ -1,7 +1,7 @@
 'use client';
 
 import { JobType, Location } from "@prisma/client";
-import FormError from "@/app/components/FormError";
+// import FormError from "@/app/components/FormError";
 import { updatePost } from "../../actions";
 import { humanReadableEnum } from "@/app/utils/formatters";
 import { useEffect, useState, useTransition } from "react";
@@ -23,7 +23,7 @@ export default function UpdatePost({ params }: { params: Promise<{ id: string }>
     const id = parseInt(resolvedParams.id);
     const [jobPost, setJobPost] = useState<JobPostData | null>(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string>("");
+    // const [error, setError] = useState<string>("");
     const [isPending, startTransition] = useTransition();
 
     useEffect(() => {
@@ -50,15 +50,16 @@ export default function UpdatePost({ params }: { params: Promise<{ id: string }>
     }, [id]);
 
     async function handleSubmit(formData: FormData) {
-        setError("");
+        // setError("");
         startTransition(async () => {
             try {
                 const result = await updatePost(id, { message: "" }, formData);
                 if (result?.message) {
-                    setError(result.message);
+                    // setError(result.message);
                 }
             } catch (e) {
-                setError(e instanceof Error ? e.message : "Something went wrong");
+                console.error("Error updating job post:", e);
+                // setError(e instanceof Error ? e.message : "Something went wrong");
             }
         });
     }
@@ -93,7 +94,7 @@ export default function UpdatePost({ params }: { params: Promise<{ id: string }>
         <div className="flex flex-col justify-center px-16 w-1/2">
             <h1 className="text-2xl font-bold mb-2 mt-6">Update Job Post</h1>
             <form action={handleSubmit} className="space-y-6">
-                {error && <FormError message={error} />}
+                {/* {error && <FormError message={error} />} */}
                 <div>
                     <label htmlFor="title" className="block text-lg mb-2">
                         Title <span className="text-red-500">*</span>

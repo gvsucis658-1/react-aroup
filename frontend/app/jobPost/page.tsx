@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { humanReadableEnum } from "@/app/utils/formatters";
 
-export default async function Posts() {
+ const Posts = async () => {
   const jobPosts = await prisma.jobPost.findMany({
     orderBy: {
       deadline: 'desc',
@@ -35,3 +35,5 @@ export default async function Posts() {
     </div>
   );
 }
+
+export default Posts;

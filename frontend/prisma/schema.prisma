@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = ""
+  url      = env("DATABASE_URL")
 }
 
 enum Location {
@@ -20,7 +20,7 @@ enum JobType {
   INTERNSHIP
 }
 
-model jobPost {
+model JobPost {
   id        Int      @id @default(autoincrement())
   title     String
   team      String

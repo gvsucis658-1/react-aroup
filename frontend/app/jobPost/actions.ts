@@ -64,6 +64,23 @@ export async function updatePost(id: number, prevState: FormState, formData: For
       },
     });
 
+    revalidatePath(`/jobPost/${id}`);
+  } catch (error) {
+    return {
+      message: error instanceof Error ? error.message : "Something went wrong",
+    };
+  }
+
+  redirect(`/jobPost`);
+}
+
+export async function deletePost(id: number) {
+  try {
+    console.log("Deleting post");
+    await prisma.jobPost.delete({
+      where: { id },
+    });
+
     revalidatePath("/jobPost");
   } catch (error) {
     return {
