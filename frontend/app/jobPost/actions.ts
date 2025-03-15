@@ -5,11 +5,7 @@ import { JobType, Location } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-interface FormState {
-  message: string;
-}
-
-export async function createPost(prevState: FormState, formData: FormData) {
+export async function createPost(formData: FormData) {
   try {
     const title = formData.get("title");
     const team = formData.get("team");
@@ -18,7 +14,8 @@ export async function createPost(prevState: FormState, formData: FormData) {
     const deadline = formData.get("deadline");
 
     if (!title || !team || !location || !type || !deadline) {
-      return { message: "All fields are required" };
+      console.log("All fields are required");
+      return;
     }
 
     await prisma.jobPost.create({
@@ -33,28 +30,28 @@ export async function createPost(prevState: FormState, formData: FormData) {
 
     revalidatePath("/jobPost");
   } catch (error) {
-    return {
-      message: error instanceof Error ? error.message : "Something went wrong",
-    };
+    console.log(error);
   }
 
   redirect("/jobPost");
 }
 
-export async function updatePost(id: number, prevState: FormState, formData: FormData) {
+export async function updatePost(formData: FormData) {
+  const id = formData.get("id");
   try {
     const title = formData.get("title");
     const team = formData.get("team");
     const location = formData.get("location");
     const type = formData.get("type");
     const deadline = formData.get("deadline");
-
+    
     if (!title || !team || !location || !type || !deadline) {
-      return { message: "All fields are required" };
+      console.error("All fields are required");
+      return;
     }
 
     await prisma.jobPost.update({
-      where: { id },
+      where: { id: parseInt(id as string) },
       data: {
         title: title as string,
         team: team as string,
@@ -66,26 +63,21 @@ export async function updatePost(id: number, prevState: FormState, formData: For
 
     revalidatePath(`/jobPost/${id}`);
   } catch (error) {
-    return {
-      message: error instanceof Error ? error.message : "Something went wrong",
-    };
+    console.log(error);
   }
 
-  redirect(`/jobPost`);
+  redirect(`/jobPost/${id}`);
 }
 
 export async function deletePost(id: number) {
   try {
-    console.log("Deleting post");
     await prisma.jobPost.delete({
       where: { id },
     });
 
     revalidatePath("/jobPost");
   } catch (error) {
-    return {
-      message: error instanceof Error ? error.message : "Something went wrong",
-    };
+    console.log(error);
   }
 
   redirect("/jobPost");

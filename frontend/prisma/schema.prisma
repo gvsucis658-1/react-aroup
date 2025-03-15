@@ -26,6 +26,7 @@ model JobPost {
   team      String
   location  Location
   type      JobType
-  published Boolean  @default(true)
   deadline  DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

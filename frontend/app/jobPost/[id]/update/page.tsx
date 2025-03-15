@@ -1,100 +1,28 @@
-'use client';
-
 import { JobType, Location } from "@prisma/client";
-// import FormError from "@/app/components/FormError";
 import { updatePost } from "../../actions";
 import { humanReadableEnum } from "@/app/utils/formatters";
-import { useEffect, useState, useTransition } from "react";
+import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
-import { use } from "react";
 
-interface JobPostData {
-    id: number;
-    title: string;
-    team: string;
-    location: Location;
-    type: JobType;
-    deadline: string;
-    published: boolean;
-}
 
-export default function UpdatePost({ params }: { params: Promise<{ id: string }> }) {
-    const resolvedParams = use(params);
+export default async function UpdatePost({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = await params;
     const id = parseInt(resolvedParams.id);
-    const [jobPost, setJobPost] = useState<JobPostData | null>(null);
-    const [loading, setLoading] = useState(true);
-    // const [error, setError] = useState<string>("");
-    const [isPending, startTransition] = useTransition();
-
-    useEffect(() => {
-        async function fetchJobPost() {
-            try {
-                const response = await fetch(`/api/jobpost/${id}`);
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || 'Failed to fetch job post');
-                }
-                
-                data.deadline = new Date(data.deadline).toISOString().split('T')[0];
-                setJobPost(data);
-            } catch (error) {
-                console.error("Error fetching job post:", error);
-                notFound();
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchJobPost();
-    }, [id]);
-
-    async function handleSubmit(formData: FormData) {
-        // setError("");
-        startTransition(async () => {
-            try {
-                const result = await updatePost(id, { message: "" }, formData);
-                if (result?.message) {
-                    // setError(result.message);
-                }
-            } catch (e) {
-                console.error("Error updating job post:", e);
-                // setError(e instanceof Error ? e.message : "Something went wrong");
-            }
-        });
-    }
-
-    if (loading) {
-        return (
-            <div className="flex flex-col justify-center w-1/2 px-16 mt-16">
-                {Array.from({ length: 8 }).map((_, index) => (
-                    <div key={index} className="flex animate-pulse space-x-4">
-                        <div className="size-10 rounded-full bg-gray-200"></div>
-                        <div className="flex-1 space-y-6 py-1">
-                            <div className="h-2 rounded bg-gray-200"></div>
-                            <div className="space-y-3">
-                                <div className="grid grid-cols-3 gap-4">
-                                    <div className="col-span-2 h-2 rounded bg-gray-200"></div>
-                                    <div className="col-span-1 h-2 rounded bg-gray-200"></div>
-                                </div>
-                                <div className="h-2 rounded bg-gray-200"></div>
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        );
-    }
+    const jobPost = await prisma.jobPost.findUnique({
+        where: { id },
+    });
 
     if (!jobPost) {
-        return notFound();
+        notFound();
     }
+    
+    const formattedDeadline = jobPost.deadline.toISOString().split('T')[0];
 
     return (
         <div className="flex flex-col justify-center px-16 w-1/2">
             <h1 className="text-2xl font-bold mb-2 mt-6">Update Job Post</h1>
-            <form action={handleSubmit} className="space-y-6">
-                {/* {error && <FormError message={error} />} */}
+            <form action={updatePost} className="space-y-6">
+                <input type="hidden" name="id" value={id} />
                 <div>
                     <label htmlFor="title" className="block text-lg mb-2">
                         Title <span className="text-red-500">*</span>
@@ -170,18 +98,15 @@ export default function UpdatePost({ params }: { params: Promise<{ id: string }>
                         id="deadline"
                         name="deadline"
                         required
-                        defaultValue={jobPost.deadline}
+                        defaultValue={formattedDeadline}
                         className="w-full px-4 py-2 border rounded-lg"
                     />
                 </div>
                 <button
                     type="submit"
-                    disabled={isPending}
-                    className={`w-full bg-blue-500 text-white py-3 rounded-lg ${
-                        isPending ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-                    }`}
+                    className="w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600"
                 >
-                    {isPending ? 'Updating...' : 'Update Post'}
+                    Update Post
                 </button>
             </form>
         </div>

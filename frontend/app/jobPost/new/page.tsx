@@ -1,23 +1,15 @@
 'use client';
 
 import { JobType, Location } from "@prisma/client";
-import { useActionState } from "react";
-import FormError from "@/app/components/FormError";
 import { createPost } from "../actions";
 import { humanReadableEnum } from "@/app/utils/formatters";
 
-const initialState = {
-  message: "",
-};
 
 export default function NewPost() {
-  const [state, formAction] = useActionState(createPost, initialState);
-
   return (
     <div className="flex flex-col justify-center px-16 w-1/2">
       <h1 className="text-2xl font-bold mb-2 mt-6">Create Job Post</h1>
-      <form action={formAction} className="space-y-6">
-        {state?.message && <FormError message={state.message} />}
+      <form action={createPost} className="space-y-6">
         <div>
           <label htmlFor="title" className="block text-lg mb-2">
             Title <span className="text-red-500">*</span>
